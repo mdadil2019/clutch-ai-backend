@@ -9,7 +9,7 @@ import VideoAnalysisService from "./videoanalysis.service";
 // It will contain functions that interact with the database and perform operations related to streams.
 class StreamsService {
     private videoAnalysisEventObserver = new VideoAnalysisEventObserver();
-    async processStreamData(url: string) {
+    async processStreamData(url: string):Promise<number> {
         const streamRepository = new StreamRepository();
         const streamId = await streamRepository.saveStream(url);
         const videoAnalysisService = new VideoAnalysisService();
@@ -19,6 +19,8 @@ class StreamsService {
         videoAnalysisService.addObserver(this.videoAnalysisEventObserver);
         //TODO: try catch to handle error while video analysis
         videoAnalysisService.analyseVideo(streamId as number);
+
+        return streamId as number;
     }
 
 }

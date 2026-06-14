@@ -8,7 +8,7 @@ import { handleIncomingStream } from "../controllers/stream.controller";
 
 const router = express.Router();
 
-router.get("/stream",handleIncomingStream)
-router.get("/status/:streamId",)
+router.post("/stream",handleIncomingStream)
+// router.get("/status/:streamId",)
 
 export default router;

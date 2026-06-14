@@ -15,5 +15,7 @@ export const AppDataSource = new DataSource({
     password: "",
     database: "clutch_ai_db",
     logging: false,
-    entities: [Stream, Event]
+    entities: [Stream, Event],
+    migrations: ["dist/db/migrations/*.js"],
+    migrationsRun: true,
 });

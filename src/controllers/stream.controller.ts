@@ -7,12 +7,13 @@ import { Request, Response } from "express";
 import StreamsService from "../services/streams.service";
 import urlSchema from "../schemas/url.schema";
 
-export const handleIncomingStream = (request : Request, response : Response) => {
+export const handleIncomingStream = async (request : Request, response : Response) => {
     const {url} = request.query;
+    //eg: http://localhost:3000/stream?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ
     const isValidURL = urlSchema.validate({url}).error === undefined;
     if(isValidURL){
         const streamService = new StreamsService();
-        const result = streamService.processStreamData({streamURL : url as string} as any);
+        const result = await streamService.processStreamData(url as string);
         response.send(result);
     } else {
         response.send("Validate the request and pass it to the service layer.");

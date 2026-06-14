@@ -7,11 +7,12 @@ console.log("Hello, World!");
 
 import express from "express";
 import { AppDataSource } from "./db/client";
-
+import router from "./routes/streams.route";
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+app.use(router);
 AppDataSource.initialize()
     .then(() => {
         console.log("Database connection established successfully!");
