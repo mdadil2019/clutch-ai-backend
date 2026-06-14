@@ -4,12 +4,13 @@
  */
 
 import { Request, Response } from "express";
-import { isValidURL } from "../utils/valildation.utils";
 import StreamsService from "../services/streams.service";
+import urlSchema from "../schemas/url.schema";
 
 export const handleIncomingStream = (request : Request, response : Response) => {
     const {url} = request.query;
-    if(isValidURL(url as string)){
+    const isValidURL = urlSchema.validate({url}).error === undefined;
+    if(isValidURL){
         const streamService = new StreamsService();
         const result = streamService.processStreamData({streamURL : url as string} as any);
         response.send(result);
