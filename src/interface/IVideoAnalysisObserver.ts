@@ -1,7 +1,7 @@
-import AnalysisEventsType from "../types/analysisevent"
+import { AnalysisEvent } from "../types/analysisevent"
 
 interface IVideoAnalysisObserver {
-    onEvent(event: AnalysisEventsType): void;
+    onEvent(event: AnalysisEvent): Promise<void>;
 }
 
 export default IVideoAnalysisObserver;

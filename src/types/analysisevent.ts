@@ -6,4 +6,10 @@ enum AnalysisEventsType{
     ERROR = "error"
 }
 
+type AnalysisEvent = {
+    type: AnalysisEventsType;
+    streamId: number;
+}
+export type {AnalysisEvent};
+
 export default AnalysisEventsType;

@@ -9,7 +9,7 @@
  */
 
 import IVideoAnalysisObserver from "../interface/IVideoAnalysisObserver";
-import AnalysisEventsType from "../types/analysisevent";
+import AnalysisEventsType, { AnalysisEvent } from "../types/analysisevent";
 class VideoAnalysisService {
     private delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
     private observers: IVideoAnalysisObserver[] = [];
@@ -18,40 +18,52 @@ class VideoAnalysisService {
         this.observers.push(observer);
     }
 
-    private notifyObservers(event: AnalysisEventsType): void {
+    private async notifyObservers(event: AnalysisEvent): Promise<void> {
         for (const observer of this.observers) {
-            observer.onEvent(event);
+            await observer.onEvent(event);
         }
     }
 
-    async analyseVideo(url: string) {
-        this.downloadVideo(url);
+    async analyseVideo(streamId: number) {
+        this.downloadVideo(streamId);
         //Fake the analysis process and return an array of timestamps of the best moments in the video
-        await this.fakeEvents(url);
+        await this.fakeEvents(streamId);
     }
 
-    async fakeEvents(url: string) {
+    private async fakeEvents(streamId: number) {
         await this.delay(1000);
         //Fake the events of the analysis process and log them to the console
-        console.log("Processing started for video: " + url);
-        this.notifyObservers(AnalysisEventsType.PROCESSING_STARTED);
+        console.log("Processing started for video: " + streamId);
+        await this.notifyObservers({ type: AnalysisEventsType.PROCESSING_STARTED, streamId });
         await this.delay(2000);
-        console.log("Processing in progress for video: " + url);
-        this.notifyObservers(AnalysisEventsType.PROCESSING_IN_PROGRESS);
+        console.log("Processing in progress for video: " + streamId);
+        await this.notifyObservers({ type: AnalysisEventsType.PROCESSING_IN_PROGRESS, streamId });
         await this.delay(3000);
-        console.log("Generating highlights for video: " + url);
-        this.notifyObservers(AnalysisEventsType.GENERATING_HIGHLIGHTS);
+        console.log("Generating highlights for video: " + streamId);
+        await this.notifyObservers({ type: AnalysisEventsType.GENERATING_HIGHLIGHTS, streamId });
         await this.delay(4000);
-        console.log("Completed analysis for video: " + url);
-        this.notifyObservers(AnalysisEventsType.COMPLETED);
+        console.log("Completed analysis for video: " + streamId);
+        await this.notifyObservers({ type: AnalysisEventsType.COMPLETED, streamId });
     }
 
-    downloadVideo(url: string): boolean {
+    private async simulateError(streamId: number) {
+        await this.delay(1000);
+        console.log("Processing started for video: " + streamId);
+        await this.notifyObservers({ type: AnalysisEventsType.PROCESSING_STARTED, streamId });
+        await this.delay(2000);
+        console.log("Processing in progress for video: " + streamId);
+        await this.notifyObservers({ type: AnalysisEventsType.PROCESSING_IN_PROGRESS, streamId });
+        await this.delay(3000);
+        console.log("Error occurred while analysing video: " + streamId);
+        await this.notifyObservers({ type: AnalysisEventsType.ERROR, streamId });
+    }
+
+    private downloadVideo(streamId: number) {
         //Fake the download process and return true if the URL is valid and false otherwise
-        if (url.startsWith("http")) {
-            return true;
-        }
-        return false;
+        // if (url.startsWith("http")) {
+        //     return true;
+        // }
+        // return false;
     }
 }
 
