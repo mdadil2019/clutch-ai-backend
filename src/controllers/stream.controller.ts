@@ -16,6 +16,6 @@ export const handleIncomingStream = async (request : Request, response : Respons
         const result = await streamService.processStreamData(url as string);
         response.send(result);
     } else {
-        response.send("Validate the request and pass it to the service layer.");
+        response.status(400).send("Invalid URL");
     }
 }
