@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "build": "tsc",
     "start": "node dist/index.js",
     "migration:generate": "typeorm-ts-node-commonjs migration:generate src/db/migrations/migration -d src/db/client.ts",
