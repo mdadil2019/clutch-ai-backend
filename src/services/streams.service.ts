@@ -27,6 +27,10 @@ class StreamsService {
         return streamId as number;
     }
 
+    /**
+     * Question - Do we need to write test for this as our video analysis service 
+     * is already tested and we are just calling the method of that service here?
+     * */
     private async initiateVideoAnalysis(streamId: number): Promise<void> {
         try {
             await this.videoAnalysisService.analyseVideo(streamId as number);

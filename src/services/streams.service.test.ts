@@ -68,4 +68,5 @@ describe("StreamsService", () => {
             // Assert
             expect(mockAnalyseVideo).toHaveBeenCalledTimes(1);
         });
+
 });
