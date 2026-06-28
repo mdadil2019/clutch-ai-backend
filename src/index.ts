@@ -9,12 +9,14 @@ import express from "express";
 import { AppDataSource } from "./db/client";
 import router from "./routes/streams.route";
 import cors from "cors";
+import { globalErrorHandler } from "./middleware/errorHandler";
 const app = express();
 const PORT = 3001;
 
 app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 app.use(router);
+app.use(globalErrorHandler);
 AppDataSource.initialize()
     .then(() => {
         console.log("Database connection established successfully!");

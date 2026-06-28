@@ -20,11 +20,12 @@ describe("Stream Controller", () => {
             status: jest.fn().mockReturnThis()
         } as unknown as Response;
 
+        const mockNext = jest.fn();
         //Act
-        await handleIncomingStream(mockRequest, mockResponse);
+        await handleIncomingStream(mockRequest, mockResponse, mockNext);
 
         //Assert
-        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockNext).toHaveBeenCalledWith(expect.objectContaining({ statusCode: 400 }));
         expect(mockProcessStream).not.toHaveBeenCalled();
     }),
 
@@ -36,15 +37,17 @@ describe("Stream Controller", () => {
         
         const mockResponse = {
             send: jest.fn(),
-            status: jest.fn().mockReturnThis()
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn().mockReturnThis()
         } as unknown as Response;
 
+        const mockNext = jest.fn();
         //Act
-        await handleIncomingStream(mockRequest, mockResponse);
+        await handleIncomingStream(mockRequest, mockResponse, mockNext);
 
         //Assert
         expect(mockProcessStream).toHaveBeenCalledWith(url);
-        expect(mockResponse.send).toHaveBeenCalled();
+        expect(mockResponse.json).toHaveBeenCalled();
         expect(mockResponse.status).not.toHaveBeenCalledWith(400);
         
     }),
@@ -63,12 +66,12 @@ describe("Stream Controller", () => {
         const mockError = new Error("Failed to process stream");
         mockProcessStream.mockImplementation(() => Promise.reject(mockError));
 
+        const mockNext = jest.fn();
         //Act
-        await handleIncomingStream(mockRequest, mockResponse);
+        await handleIncomingStream(mockRequest, mockResponse,mockNext );
         
         //Assert
         expect(mockProcessStream).toHaveBeenCalledWith(url);
-        expect(mockResponse.status).toHaveBeenCalledWith(500);
-        expect(mockResponse.send).toHaveBeenCalledWith(`Error processing stream data: ${mockError}`);
+        expect(mockNext).toHaveBeenCalled()
     });
 });
