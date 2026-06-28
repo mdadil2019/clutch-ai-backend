@@ -9,7 +9,11 @@ class VideoAnalysisEventObserver implements IVideoAnalysisObserver {
     private eventRepository = new EventRepository();
     async onEvent(event: AnalysisEvent): Promise<void> {
         console.log("Received event: " + event);
-        await this.eventRepository.saveEvent(event);
+        try {
+            await this.eventRepository.saveEvent(event);
+        } catch (error) {
+            throw new Error("Failed to save event: " + error);
+        }
     }
 }
 

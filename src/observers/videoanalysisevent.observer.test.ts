@@ -27,4 +27,15 @@ describe("VideoAnalysisEventObserver", () => {
         expect(mockSaveEvent).toHaveBeenCalledWith(mockEvent);
         expect(mockSaveEvent).toHaveBeenCalledTimes(1);
     });
+
+    test("should handle error when saving event fails", async () => {
+        // Arrange
+        const observer = new VideoAnalysisEventObserver();
+        const mockEvent: AnalysisEvent = { type: AnalysisEventsType.PROCESSING_STARTED, streamId: 1 };
+        const mockError = new Error("Failed to save event");
+        mockSaveEvent.mockImplementation(() => Promise.reject(mockError));
+
+        // Act & Assert
+        await expect(observer.onEvent(mockEvent)).rejects.toThrow("Failed to save event: Error: Failed to save event");
+    });
 });

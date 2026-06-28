@@ -25,9 +25,13 @@ class VideoAnalysisService {
     }
 
     async analyseVideo(streamId: number) {
-        this.downloadVideo(streamId);
         //Fake the analysis process and return an array of timestamps of the best moments in the video
-        await this.fakeEvents(streamId);
+        try{
+            await this.fakeEvents(streamId);
+        }catch(error){  
+            console.error("Error occurred while analysing video: " + streamId, error);
+            await this.notifyObservers({ type: AnalysisEventsType.ERROR, streamId });
+        }
     }
 
     private async fakeEvents(streamId: number) {
@@ -46,25 +50,6 @@ class VideoAnalysisService {
         await this.notifyObservers({ type: AnalysisEventsType.COMPLETED, streamId });
     }
 
-    private async simulateError(streamId: number) {
-        await this.delay(1000);
-        console.log("Processing started for video: " + streamId);
-        await this.notifyObservers({ type: AnalysisEventsType.PROCESSING_STARTED, streamId });
-        await this.delay(2000);
-        console.log("Processing in progress for video: " + streamId);
-        await this.notifyObservers({ type: AnalysisEventsType.PROCESSING_IN_PROGRESS, streamId });
-        await this.delay(3000);
-        console.log("Error occurred while analysing video: " + streamId);
-        await this.notifyObservers({ type: AnalysisEventsType.ERROR, streamId });
-    }
-
-    private downloadVideo(streamId: number) {
-        //Fake the download process and return true if the URL is valid and false otherwise
-        // if (url.startsWith("http")) {
-        //     return true;
-        // }
-        // return false;
-    }
 }
 
 export default VideoAnalysisService;
