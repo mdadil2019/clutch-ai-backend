@@ -15,7 +15,7 @@ export const handleIncomingStream = async (request: Request, response: Response)
         const streamService = new StreamsService();
         try {
             const result = await streamService.processStream(url as string);
-            response.send(result);
+            response.send(JSON.stringify(result));
         } catch (error) {
             response.status(500).send(`Error processing stream data: ${error}`);
         }

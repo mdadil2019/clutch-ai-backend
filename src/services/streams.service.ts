@@ -14,17 +14,17 @@ class StreamsService {
         this.videoAnalysisService.addObserver(this.videoAnalysisEventObserver);
     }
 
-    async processStream(url: string): Promise<number> {
+    async processStream(url: string): Promise<Stream> {
         const streamRepository = new StreamRepository();
-        let streamId: number | undefined;
+        let stream: Stream | undefined;
         try {
-            streamId = await streamRepository.saveStream(url);
+            stream = await streamRepository.saveStream(url);
         } catch (error) {
             // Handle error while saving stream
             throw new Error(`Failed to save stream: ${error}`);
         }
-        this.initiateVideoAnalysis(streamId as number);
-        return streamId as number;
+        this.initiateVideoAnalysis(stream?.id as number);
+        return stream as Stream;
     }
 
     /**
